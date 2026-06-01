@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Starventure.Planets {
     [RequireComponent(typeof(SphereCollider))]
     public class AtmosphereCollider : MonoBehaviour {
-        [SerializeField] private Planet planet;
+        public Planet planet;
         [SerializeField] private SphereCollider baseCollider;
 
         private void Start() {
