@@ -147,7 +147,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: {fileID: 3692608164016927875}
-  atmosphereCollider: {fileID: 0}
 --- !u!114 &3692608164016927875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,8 +160,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   core: {fileID: 1003982413057915215}
-  innerRadius: 5
-  outerRadius: 2
+  innerRadius: 20
+  outerRadius: 10
   gravity: 9.81
   gravityLossCurve:
     serializedVersion: 2
@@ -282,7 +281,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3027766861371541989}

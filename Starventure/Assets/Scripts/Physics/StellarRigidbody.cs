@@ -27,13 +27,6 @@ namespace Starventure.Physics {
         }
 
         private void Update() {
-            if (!currentPlanet && !useRegularGravity) {
-                _gravityVector = Vector3.zero;
-                rb.linearDamping = 0;
-                rb.angularDamping = 0;
-                return;
-            }
-
             if (useRegularGravity) {
                 rb.useGravity = true;
                 rb.linearDamping = _regularDamping;
@@ -41,7 +34,22 @@ namespace Starventure.Physics {
                 return;
             }
 
+            rb.useGravity = false;
+            
+            if (!currentPlanet) {
+                _gravityVector = Vector3.zero;
+                rb.linearDamping = 0;
+                rb.angularDamping = 0;
+            }
+        }
+
+        private void FixedUpdate() {
+            if (!currentPlanet || useRegularGravity) {
+                return;
+            }
+
             _gravityVector = currentPlanet.gravity.CalculateGravityVector(rb.position);
+            rb.AddForce(_gravityVector, ForceMode.Acceleration);
         }
 
         private void OnTriggerEnter(Collider other) {
