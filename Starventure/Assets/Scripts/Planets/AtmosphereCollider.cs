@@ -5,7 +5,7 @@ namespace Starventure.Planets {
     [RequireComponent(typeof(SphereCollider))]
     public class AtmosphereCollider : MonoBehaviour {
         public Planet planet;
-        [SerializeField] private SphereCollider baseCollider;
+        public SphereCollider baseCollider;
 
         private void Start() {
             if (!baseCollider) {

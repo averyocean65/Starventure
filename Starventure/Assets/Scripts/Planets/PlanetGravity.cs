@@ -22,5 +22,27 @@ namespace Starventure.Planets {
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireSphere(core.position, Radius);
         }
+
+        public float CalculateGravityStrength(Vector3 objectPosition) {
+            float distance = Vector3.Distance(core.position, objectPosition);
+            if (distance <= innerRadius) {
+                return gravity;
+            }
+
+            if (distance >= Radius) {
+                return 0;
+            }
+            
+            return gravityLossCurve.Evaluate((distance - innerRadius) / outerRadius) * gravity;
+        }
+
+        public Vector3 CalculateGravityDirection(Vector3 objectPosition) {
+            return (core.position - objectPosition).normalized;
+        }
+        
+        public Vector3 CalculateGravityVector(Vector3 objectPosition) {
+            float gravityStrength = CalculateGravityStrength(objectPosition);
+            return CalculateGravityDirection(objectPosition) * CalculateGravityStrength(objectPosition);
+        }
     }
 }
