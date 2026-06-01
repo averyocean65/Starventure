@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace Starventure.Planets {
     public class PlanetGravity : MonoBehaviour {
+        public float Radius => innerRadius + outerRadius;
+        
         public Transform core;
         public float innerRadius = 10.0f;
         public float outerRadius = 5.0f;
@@ -18,7 +20,7 @@ namespace Starventure.Planets {
             Gizmos.DrawWireSphere(core.position, innerRadius);
 
             Gizmos.color = Color.magenta;
-            Gizmos.DrawWireSphere(core.position, innerRadius + outerRadius);
+            Gizmos.DrawWireSphere(core.position, Radius);
         }
     }
 }

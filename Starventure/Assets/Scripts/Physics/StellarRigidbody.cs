@@ -1,4 +1,5 @@
 using System;
+using Starventure.Planets;
 using UnityEngine;
 
 namespace Starventure.Physics {
@@ -6,13 +7,12 @@ namespace Starventure.Physics {
     public class StellarRigidbody : MonoBehaviour
     {
         [SerializeField] private Rigidbody rb;
+        public Planet currentPlanet;
 
         private void Start() {
             if (!rb) {
-                return;
+                rb = GetComponent<Rigidbody>();
             }
-
-            rb = GetComponent<Rigidbody>();
         }
     }
 }
