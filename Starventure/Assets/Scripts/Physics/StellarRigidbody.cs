@@ -8,7 +8,7 @@ namespace Starventure.Physics {
         
         public bool useRegularGravity;
 
-        private Vector3 _gravityVector;
+        public Vector3 GravityVector { get; protected set; }
         private float _regularDamping;
         private float _regularAngularDamping;
 
@@ -33,7 +33,7 @@ namespace Starventure.Physics {
             rb.useGravity = false;
             
             if (!currentPlanet) {
-                _gravityVector = Vector3.zero;
+                GravityVector = Vector3.zero;
                 rb.linearDamping = 0;
                 rb.angularDamping = 0;
             }
@@ -48,8 +48,8 @@ namespace Starventure.Physics {
                 return;
             }
 
-            _gravityVector = currentPlanet.gravity.CalculateGravityVector(rb.position);
-            rb.AddForce(_gravityVector, ForceMode.Acceleration);
+            GravityVector = currentPlanet.gravity.CalculateGravityVector(rb.position);
+            rb.AddForce(GravityVector, ForceMode.Acceleration);
         }
 
         private void OnDrawGizmosSelected() {
@@ -58,7 +58,7 @@ namespace Starventure.Physics {
             }
             
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(rb.position, rb.position + _gravityVector);
+            Gizmos.DrawLine(rb.position, rb.position + GravityVector);
         }
     }
 }
