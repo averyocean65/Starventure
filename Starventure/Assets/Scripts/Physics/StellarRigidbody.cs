@@ -1,14 +1,10 @@
-using System;
-using Starventure.Planets;
 using UnityEngine;
 
 namespace Starventure.Physics {
     [RequireComponent(typeof(Rigidbody))]
-    public class StellarRigidbody : MonoBehaviour
+    public class StellarRigidbody : StellarObject
     {
-        [SerializeField] private Rigidbody rb;
-        public Planet currentPlanet;
-        public AtmosphereCollider currentAtmosphere;
+        public Rigidbody rb;
         
         public bool useRegularGravity;
 
@@ -41,6 +37,10 @@ namespace Starventure.Physics {
                 rb.linearDamping = 0;
                 rb.angularDamping = 0;
             }
+
+            float dampingMultiplier = currentPlanet.gravity.CalculateDampingMultiplier(rb.position);
+            rb.linearDamping = _regularDamping * dampingMultiplier;
+            rb.angularDamping = _regularAngularDamping * dampingMultiplier;
         }
 
         private void FixedUpdate() {
@@ -50,29 +50,6 @@ namespace Starventure.Physics {
 
             _gravityVector = currentPlanet.gravity.CalculateGravityVector(rb.position);
             rb.AddForce(_gravityVector, ForceMode.Acceleration);
-        }
-
-        private void OnTriggerEnter(Collider other) {
-            if (!other.CompareTag(CustomTags.Atmosphere)) {
-                return;
-            }
-
-            currentAtmosphere = other.GetComponent<AtmosphereCollider>();
-            if (!currentAtmosphere) {
-                Debug.LogError($"{other.name} is tagged with {CustomTags.Atmosphere}, but no {nameof(AtmosphereCollider)} is present!");
-                return;
-            }
-
-            currentPlanet = currentAtmosphere.planet;
-            Debug.Log($"Found planet: {currentPlanet.name}");
-        }
-
-        private void OnTriggerExit(Collider other) {
-            if (other == currentAtmosphere.baseCollider) {
-                Debug.Log($"Left planet: {currentPlanet.name}");
-                currentAtmosphere = null;
-                currentPlanet = null;
-            }
         }
 
         private void OnDrawGizmosSelected() {

@@ -10,6 +10,7 @@ namespace Starventure.Planets {
         public float outerRadius = 5.0f;
         public float gravity = 9.81f;
         public AnimationCurve gravityLossCurve = AnimationCurve.Linear(0, 1, 1, 0);
+        public AnimationCurve dampingCurve = AnimationCurve.Linear(0, 1, 1, 0);
 
         private void OnDrawGizmos() {
             if(!core) {
@@ -34,6 +35,19 @@ namespace Starventure.Planets {
             }
             
             return gravityLossCurve.Evaluate((distance - innerRadius) / outerRadius) * gravity;
+        }
+        
+        public float CalculateDampingMultiplier(Vector3 objectPosition) {
+            float distance = Vector3.Distance(core.position, objectPosition);
+            if (distance <= innerRadius) {
+                return 1;
+            }
+
+            if (distance >= Radius) {
+                return 0;
+            }
+            
+            return gravityLossCurve.Evaluate((distance - innerRadius) / outerRadius);
         }
 
         public Vector3 CalculateGravityDirection(Vector3 objectPosition) {
