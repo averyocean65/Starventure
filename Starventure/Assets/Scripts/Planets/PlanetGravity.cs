@@ -55,7 +55,6 @@ namespace Starventure.Planets {
         }
         
         public Vector3 CalculateGravityVector(Vector3 objectPosition) {
-            float gravityStrength = CalculateGravityStrength(objectPosition);
             return CalculateGravityDirection(objectPosition) * CalculateGravityStrength(objectPosition);
         }
     }

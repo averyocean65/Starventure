@@ -8,6 +8,13 @@ namespace Starventure.Player {
 		[SerializeField] private Transform orientation;
 		[SerializeField] private float speed = 5.0f;
 		[SerializeField] private float jumpForce = 10.0f;
+
+		[SerializeField] private Transform groundCheck;
+		[SerializeField] private float groundCheckRadius;
+		[SerializeField] private LayerMask groundCheckLayer;
+
+		private bool _isGrounded;
+		
 		private Rigidbody _rb;
 		private Vector2 _moveInput;
 
@@ -19,17 +26,29 @@ namespace Starventure.Player {
 			_rb = srb.rb;
 		}
 
+		private void UpdateIsGrounded() {
+			if (!srb.currentPlanet) {
+				_isGrounded = false;
+				return;
+			}
+
+			_isGrounded = UnityEngine.Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundCheckLayer,
+				QueryTriggerInteraction.Ignore);
+		}
+
 		private void Update() {
+			UpdateIsGrounded();
+			
 			if (!srb.currentPlanet) {
 				return;
 			}
 			
-			transform.up = -srb.currentPlanet.gravity.CalculateGravityDirection(transform.position);
+			transform.up = -srb.GravityDirection;
  
 			_moveInput = InputManager.Player.Move.ReadValue<Vector2>().normalized;
 
-			if (InputManager.Player.Jump.WasPressedThisFrame()) {
-				_rb.AddForce(-srb.GravityVector * jumpForce, ForceMode.Impulse);
+			if (InputManager.Player.Jump.WasPressedThisFrame() && _isGrounded) {
+				_rb.AddForce(-srb.GravityDirection * jumpForce, ForceMode.Impulse);
 			}
 		}
 
@@ -37,6 +56,17 @@ namespace Starventure.Player {
 			Vector3 movementDir = orientation.right * _moveInput.x + orientation.forward * _moveInput.y;
 			Vector3 predictedPos = Vector3.MoveTowards(transform.position, transform.position + movementDir, speed * Time.deltaTime);
 			_rb.MovePosition(predictedPos);
+		}
+
+		private void OnDrawGizmos() {
+			if (!groundCheck) {
+				return;
+			}
+			
+			// i know, i know.. nested ternary operators are an eyesore, but I'm like... lazy!
+			Color color = Application.isPlaying ? (_isGrounded ? Color.green : Color.red) : Color.green;
+			Gizmos.color = color;
+			Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
 		}
 	}
 }

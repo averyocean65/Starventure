@@ -8,7 +8,9 @@ namespace Starventure.Physics {
         
         public bool useRegularGravity;
 
-        public Vector3 GravityVector { get; protected set; }
+        public Vector3 GravityVector => GravityDirection * GravityStrength;
+        public Vector3 GravityDirection { get; protected set; }
+        public float GravityStrength { get; protected set; }
         private float _regularDamping;
         private float _regularAngularDamping;
 
@@ -33,7 +35,7 @@ namespace Starventure.Physics {
             rb.useGravity = false;
             
             if (!currentPlanet) {
-                GravityVector = Vector3.zero;
+                GravityDirection = Vector3.zero;
                 rb.linearDamping = 0;
                 rb.angularDamping = 0;
             }
@@ -48,7 +50,8 @@ namespace Starventure.Physics {
                 return;
             }
 
-            GravityVector = currentPlanet.gravity.CalculateGravityVector(rb.position);
+            GravityDirection = currentPlanet.gravity.CalculateGravityDirection(rb.position);
+            GravityStrength = currentPlanet.gravity.CalculateGravityStrength(rb.position);
             rb.AddForce(GravityVector, ForceMode.Acceleration);
         }
 
