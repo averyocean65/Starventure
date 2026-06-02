@@ -5,8 +5,8 @@ using UnityEngine;
 namespace Starventure.Player {
 	public class PlayerController : MonoSingleton<PlayerController> {
 		[SerializeField] private StellarRigidbody srb;
-		[SerializeField] private float acceleration = 5.0f;
-		[SerializeField] private float maxSpeed = 5.0f;
+		[SerializeField] private Transform orientation;
+		[SerializeField] private float speed = 5.0f;
 		private Rigidbody _rb;
 		private Vector2 _moveInput;
 
@@ -29,13 +29,9 @@ namespace Starventure.Player {
 		}
 
 		private void FixedUpdate() {
-			Vector3 movement = transform.right * _moveInput.x + transform.forward * _moveInput.y;
-			_rb.AddForce(movement * acceleration, ForceMode.Acceleration);
-
-			Vector3 movementVelocity = _rb.linearVelocity - srb.GravityVector;
-			if (movementVelocity.magnitude > maxSpeed) {
-				_rb.AddForce(movementVelocity.normalized * maxSpeed + srb.GravityVector, ForceMode.VelocityChange);
-			}
+			Vector3 movementDir = orientation.right * _moveInput.x + orientation.forward * _moveInput.y;
+			Vector3 predictedPos = Vector3.MoveTowards(transform.position, transform.position + movementDir, speed * Time.deltaTime);
+			_rb.MovePosition(predictedPos);
 		}
 	}
 }
