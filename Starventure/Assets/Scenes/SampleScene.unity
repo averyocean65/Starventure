@@ -418,6 +418,7 @@ MonoBehaviour:
   srb: {fileID: 401632187}
   orientation: {fileID: 516753525}
   speed: 5
+  jumpForce: 0.8
 --- !u!136 &401632189
 CapsuleCollider:
   m_ObjectHideFlags: 0

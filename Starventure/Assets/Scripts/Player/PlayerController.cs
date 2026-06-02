@@ -7,6 +7,7 @@ namespace Starventure.Player {
 		[SerializeField] private StellarRigidbody srb;
 		[SerializeField] private Transform orientation;
 		[SerializeField] private float speed = 5.0f;
+		[SerializeField] private float jumpForce = 10.0f;
 		private Rigidbody _rb;
 		private Vector2 _moveInput;
 
@@ -24,8 +25,12 @@ namespace Starventure.Player {
 			}
 			
 			transform.up = -srb.currentPlanet.gravity.CalculateGravityDirection(transform.position);
-
+ 
 			_moveInput = InputManager.Player.Move.ReadValue<Vector2>().normalized;
+
+			if (InputManager.Player.Jump.WasPressedThisFrame()) {
+				_rb.AddForce(-srb.GravityVector * jumpForce, ForceMode.Impulse);
+			}
 		}
 
 		private void FixedUpdate() {
