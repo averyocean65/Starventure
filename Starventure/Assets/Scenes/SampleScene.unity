@@ -600,11 +600,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3692608164016927875, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: innerRadius
-      value: 50
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 3692608164016927875, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: outerRadius
-      value: 20
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3714036153779614871, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_Name
