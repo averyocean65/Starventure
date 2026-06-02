@@ -14,7 +14,7 @@ namespace Starventure.Planets {
 
             baseCollider.tag = CustomTags.Atmosphere;
             baseCollider.center = baseCollider.transform.position - planet.gravity.core.position;
-            baseCollider.radius = planet.gravity.Radius;
+            baseCollider.radius = planet.gravity.Radius / transform.lossyScale.x;
             baseCollider.isTrigger = true;
         }
     }
