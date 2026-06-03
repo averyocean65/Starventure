@@ -427,6 +427,7 @@ MonoBehaviour:
   orientation: {fileID: 1302441598699888114}
   speed: 5
   jumpForce: 7.5
+  realignSpeed: 30
   groundCheck: {fileID: 8188793532175154911}
   groundCheckRadius: 0.4
   groundCheckLayer:
@@ -462,6 +463,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentPlanet: {fileID: 0}
   currentAtmosphere: {fileID: 0}
+  OnEnterPlanet:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitPlanet:
+    m_PersistentCalls:
+      m_Calls: []
   rb: {fileID: 1421482216099467477}
   useRegularGravity: 0
 --- !u!54 &1421482216099467477

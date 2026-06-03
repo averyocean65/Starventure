@@ -74,10 +74,13 @@ namespace Starventure.Player {
 		}
 		
 		private void OnEnterPlanet(Planet arg0) {
-			GameObject dummy = new GameObject();
+			GameObject dummy = new GameObject("Up Vector Reference");
 			dummy.transform.up = -srb.GravityDirection;
 
-			_tweener = transform.DORotate(dummy.transform.eulerAngles, realignSpeed);
+			_tweener = transform.DORotate(dummy.transform.eulerAngles, realignSpeed)
+				.OnComplete(() => {
+					Destroy(dummy);
+				});
 		}
 
 		private void OnDrawGizmos() {
