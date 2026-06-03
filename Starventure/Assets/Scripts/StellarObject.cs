@@ -24,6 +24,7 @@ namespace Starventure {
             OnEnterPlanet.Invoke(currentPlanet);
             
             currentPlanet = currentAtmosphere.planet;
+            currentPlanet.RegisterVisitor(gameObject);
             Debug.Log($"Found planet: {currentPlanet.name}");
         }
 
@@ -32,6 +33,7 @@ namespace Starventure {
                 Debug.Log($"Left planet: {currentPlanet.name}");
                 
                 OnExitPlanet.Invoke(currentPlanet);
+                currentPlanet.UnregisterVisitor(gameObject);
                 
                 currentAtmosphere = null;
                 currentPlanet = null;
