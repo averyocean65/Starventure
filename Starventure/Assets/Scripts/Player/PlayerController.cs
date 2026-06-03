@@ -1,4 +1,5 @@
 
+using System.Collections;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
@@ -21,8 +22,10 @@ namespace Starventure.Player {
 
 		private bool _isGrounded;
 
-		private TweenerCore<Quaternion, Vector3, QuaternionOptions> _tweener;
+		private TweenerCore<Vector3, Vector3, VectorOptions> _tweener;
 		private bool _isTweenerRunning;
+
+		private Vector3 _gravity;
 		
 		private Rigidbody _rb;
 		private Vector2 _moveInput;
@@ -47,21 +50,14 @@ namespace Starventure.Player {
 		}
 
 		private void Update() {
-			UpdateIsGrounded();
+			if (!_isTweenerRunning && srb.currentPlanet && srb.GravityDirection != Vector3.zero) {
+				_gravity = srb.GravityDirection;
+			}
 			
-			if (!srb.currentPlanet) {
-				return;
-			}
-
-			_isTweenerRunning = _tweener != null && _tweener.IsActive() && !_tweener.IsComplete();
-			if (_isTweenerRunning) {
-				return;
-			}
-
-			transform.up = -srb.GravityDirection;
-
+			transform.up = -_gravity;
 			_moveInput = InputManager.Player.Move.ReadValue<Vector2>().normalized;
-
+			
+			UpdateIsGrounded();
 			if (InputManager.Player.Jump.WasPressedThisFrame() && _isGrounded) {
 				_rb.AddForce(-srb.GravityDirection * jumpForce, ForceMode.Impulse);
 			}
@@ -72,15 +68,26 @@ namespace Starventure.Player {
 			Vector3 predictedPos = Vector3.MoveTowards(transform.position, transform.position + movementDir, speed * Time.deltaTime);
 			_rb.MovePosition(predictedPos);
 		}
+
+		// i tried my best to make this work with DOTween, but I just can't figure it out, so... screw it!
+		private IEnumerator ISmoothGravityRedirect() {
+			float percentage = 0.0f;
+			Vector3 initialGravity = _gravity;
+			
+			_isTweenerRunning = true;
+			while (percentage < 1.0f) {
+				float timeStep = Time.deltaTime * speed;
+				
+				_gravity = Vector3.Lerp(initialGravity, srb.GravityDirection, percentage);
+				yield return new WaitForSeconds(timeStep);
+				percentage += timeStep;
+			}
+
+			_isTweenerRunning = false;
+		}
 		
 		private void OnEnterPlanet(Planet arg0) {
-			GameObject dummy = new GameObject("Up Vector Reference");
-			dummy.transform.up = -srb.GravityDirection;
-
-			_tweener = transform.DORotate(dummy.transform.eulerAngles, realignSpeed)
-				.OnComplete(() => {
-					Destroy(dummy);
-				});
+			StartCoroutine(ISmoothGravityRedirect());
 		}
 
 		private void OnDrawGizmos() {

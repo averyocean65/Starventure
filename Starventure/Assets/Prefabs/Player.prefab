@@ -427,7 +427,7 @@ MonoBehaviour:
   orientation: {fileID: 1302441598699888114}
   speed: 5
   jumpForce: 7.5
-  realignSpeed: 30
+  realignSpeed: 1
   groundCheck: {fileID: 8188793532175154911}
   groundCheckRadius: 0.4
   groundCheckLayer:
