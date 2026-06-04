@@ -82,6 +82,20 @@ namespace Starventure.Editor {
             Handles.matrix = Matrix4x4.TRS(Vector3.zero, t.orbitCenter.rotation, Vector3.one);
             Handles.DrawWireCube(t.SampledScaledPosition(t.startOffset, t.ellipseSize) + t.orbitCenter.position, Vector3.one);
         }
+
+        public override void OnInspectorGUI() {
+            base.OnInspectorGUI();
+
+            if (GUILayout.Button("Place At Point")) {
+                Orbitor t = target as Orbitor;
+
+                Matrix4x4 transformMatrix = Matrix4x4.TRS(Vector3.zero, t.orbitCenter.rotation, t.transform.lossyScale);
+                Vector3 sampledPoint = t.SampledScaledPosition(t.startOffset, t.ellipseSize) + t.orbitCenter.position;
+                sampledPoint = transformMatrix.MultiplyPoint(sampledPoint);
+                
+                t.transform.position = sampledPoint;
+            }
+        }
     }
 }
 #endif

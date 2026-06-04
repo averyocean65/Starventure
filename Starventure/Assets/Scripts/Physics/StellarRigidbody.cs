@@ -44,8 +44,9 @@ namespace Starventure.Physics {
                 GravityDirection = Vector3.zero;
                 rb.linearDamping = 0;
                 rb.angularDamping = 0;
+                return;
             }
-
+            
             float dampingMultiplier = currentPlanet.gravity.CalculateDampingMultiplier(rb.position);
             rb.linearDamping = _regularDamping * dampingMultiplier;
             rb.angularDamping = _regularAngularDamping * dampingMultiplier;

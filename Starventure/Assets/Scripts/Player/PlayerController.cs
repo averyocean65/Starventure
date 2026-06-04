@@ -12,12 +12,19 @@ namespace Starventure.Player {
 	public class PlayerController : MonoSingleton<PlayerController> {
 		[SerializeField] private StellarRigidbody srb;
 		[SerializeField] private Transform orientation;
+		
+		[Header("Movement")]
 		[SerializeField] private float acceleration = 10.0f;
 		[SerializeField] private float movementHaltForce = 0.5f;
 		[SerializeField] private float speed = 5.0f;
 		[SerializeField] private float movementHaltThreshold = 0.05f;
-		[SerializeField] private float jumpForce = 10.0f;
+		
+		[Header("Jetpack")]
+		[SerializeField] private float jetpackLaunchForce = 5.0f;
+		[SerializeField] private float jetpackCooldown = 0.1f;
+		[SerializeField] private DepletableResource stamina;
 
+		[Header("Planet Relocation")]
 		[SerializeField] private float realignSpeed = 1.0f;
 		
 		[SerializeField] private Transform groundCheck;
@@ -29,6 +36,7 @@ namespace Starventure.Player {
 		private TweenerCore<Vector3, Vector3, VectorOptions> _tweener;
 		private bool _isTweenerRunning;
 		private bool _canDisableGravity;
+		private bool _canDisableJetpack;
 
 		private Vector3 _gravity;
 		
@@ -66,16 +74,34 @@ namespace Starventure.Player {
 			
 			UpdateIsGrounded();
 
-			if (InputManager.Player.Jump.WasPressedThisFrame() && _isGrounded) {
+			if (srb.currentPlanet && (InputManager.Player.Jump.WasPressedThisFrame() && _isGrounded)) {
+				StartCoroutine(IJetpackLaunchCooldown());
+				
 				_canDisableGravity = true;
-				_rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+				_rb.AddForce(transform.up * jetpackLaunchForce, ForceMode.Impulse);
+				stamina.Deplete();
+				stamina.Restore(false);
 			}
 
-			if (InputManager.Player.Jump.WasReleasedThisFrame()) {
-				_canDisableGravity = false;
+			if (((InputManager.Player.Jump.WasReleasedThisFrame() || _isGrounded)
+			     && _canDisableGravity && _canDisableJetpack)
+			    || stamina.IsEmpty) {
+				_canDisableJetpack = false;
+				stamina.Deplete(false);
+				stamina.Restore();
+			}
+
+			if (!srb.currentPlanet) {
+				stamina.ResetCounters();
 			}
 			
 			srb.disableGravity = InputManager.Player.Jump.IsPressed() && _canDisableGravity;
+		}
+
+		private IEnumerator IJetpackLaunchCooldown() {
+			_canDisableJetpack = false;
+			yield return new WaitForSeconds(jetpackCooldown);
+			_canDisableJetpack = true;
 		}
 
 		private void FixedUpdate() {
@@ -93,10 +119,12 @@ namespace Starventure.Player {
 			// _rb.MovePosition(predictedPos);
 			
 			_rb.AddForce(movementDir * acceleration, ForceMode.Acceleration);
-			_approximatedMovementVelocity = _rb.linearVelocity - _gravity;
+
+			Vector3 gravityDeduction = srb.currentPlanet ? _gravity : Vector3.zero;
+			_approximatedMovementVelocity = _rb.linearVelocity - gravityDeduction;
 			
 			if (Mathf.Abs(_approximatedMovementVelocity.magnitude) > speed) {
-				_rb.linearVelocity = _approximatedMovementVelocity.normalized * speed + _gravity;
+				_rb.linearVelocity = _approximatedMovementVelocity.normalized * speed + gravityDeduction;
 			}
 		}
 
@@ -119,6 +147,8 @@ namespace Starventure.Player {
 		
 		private void OnEnterPlanet(Planet arg0) {
 			StartCoroutine(ISmoothGravityRedirect());
+			_canDisableGravity = true;
+			_canDisableJetpack = true;
 		}
 
 		private void OnDrawGizmos() {
