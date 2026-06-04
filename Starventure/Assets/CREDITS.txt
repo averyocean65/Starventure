@@ -1,0 +1,5 @@
+Skyboxes:
+- Night Sky HDRI 012 (https://ambientcg.com/view?id=NightSkyHDRI012)
+
+Environment:
+- Ground 048 (https://ambientcg.com/view?id=Ground048)

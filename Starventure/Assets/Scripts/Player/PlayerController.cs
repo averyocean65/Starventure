@@ -5,13 +5,16 @@ using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using Starventure.Physics;
 using Starventure.Planets;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Starventure.Player {
 	public class PlayerController : MonoSingleton<PlayerController> {
 		[SerializeField] private StellarRigidbody srb;
 		[SerializeField] private Transform orientation;
+		[SerializeField] private float acceleration = 10.0f;
 		[SerializeField] private float speed = 5.0f;
+		[SerializeField] private float movementHaltThreshold = 0.05f;
 		[SerializeField] private float jumpForce = 10.0f;
 
 		[SerializeField] private float realignSpeed = 1.0f;
@@ -28,7 +31,9 @@ namespace Starventure.Player {
 		private Vector3 _gravity;
 		
 		private Rigidbody _rb;
+		
 		private Vector2 _moveInput;
+		private Vector3 _approximatedMovementVelocity;
 
 		private void Start() {
 			if (!srb) {
@@ -58,15 +63,30 @@ namespace Starventure.Player {
 			_moveInput = InputManager.Player.Move.ReadValue<Vector2>().normalized;
 			
 			UpdateIsGrounded();
-			if (InputManager.Player.Jump.WasPressedThisFrame() && _isGrounded) {
-				_rb.AddForce(-srb.GravityDirection * jumpForce, ForceMode.Impulse);
-			}
+			
+			// TODO: fix jump system
+			// if (InputManager.Player.Jump.WasPressedThisFrame() && _isGrounded) {
+			// 	_rb.AddForce(-srb.GravityDirection * jumpForce, ForceMode.Impulse);
+			// }
 		}
 
 		private void FixedUpdate() {
 			Vector3 movementDir = orientation.right * _moveInput.x + orientation.forward * _moveInput.y;
-			Vector3 predictedPos = Vector3.MoveTowards(transform.position, transform.position + movementDir, speed * Time.deltaTime);
-			_rb.MovePosition(predictedPos);
+
+			if (_moveInput.sqrMagnitude < movementHaltThreshold) {
+				_rb.AddForce(_gravity, ForceMode.VelocityChange);
+				return;
+			}
+			
+			// Vector3 predictedPos = Vector3.MoveTowards(transform.position, transform.position + movementDir, speed * Time.deltaTime);
+			// _rb.MovePosition(predictedPos);
+			
+			_rb.AddForce(movementDir * acceleration, ForceMode.Acceleration);
+			_approximatedMovementVelocity = _rb.linearVelocity - _gravity;
+			
+			if (Mathf.Abs(_approximatedMovementVelocity.magnitude) > speed) {
+				_rb.linearVelocity = _approximatedMovementVelocity.normalized * speed + _gravity;
+			}
 		}
 
 		// i tried my best to make this work with DOTween, but I just can't figure it out, so... screw it!
