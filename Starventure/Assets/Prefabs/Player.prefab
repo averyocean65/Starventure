@@ -425,7 +425,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   srb: {fileID: 365745889671712123}
   orientation: {fileID: 1302441598699888114}
+  acceleration: 10
+  movementHaltForce: 100
   speed: 5
+  movementHaltThreshold: 0.05
   jumpForce: 7.5
   realignSpeed: 1
   groundCheck: {fileID: 8188793532175154911}
@@ -471,6 +474,7 @@ MonoBehaviour:
       m_Calls: []
   rb: {fileID: 1421482216099467477}
   useRegularGravity: 0
+  disableGravity: 0
 --- !u!54 &1421482216099467477
 Rigidbody:
   m_ObjectHideFlags: 0

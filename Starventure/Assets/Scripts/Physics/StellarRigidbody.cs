@@ -7,6 +7,7 @@ namespace Starventure.Physics {
         public Rigidbody rb;
         
         public bool useRegularGravity;
+        public bool disableGravity;
 
         public Vector3 GravityVector => GravityDirection * GravityStrength;
         public Vector3 GravityDirection { get; protected set; }
@@ -25,6 +26,11 @@ namespace Starventure.Physics {
         }
 
         private void Update() {
+            if (disableGravity) {
+                rb.useGravity = false;
+                return;
+            }
+            
             if (useRegularGravity) {
                 rb.useGravity = true;
                 rb.linearDamping = _regularDamping;
@@ -52,6 +58,11 @@ namespace Starventure.Physics {
 
             GravityDirection = currentPlanet.gravity.CalculateGravityDirection(rb.position);
             GravityStrength = currentPlanet.gravity.CalculateGravityStrength(rb.position);
+
+            if (disableGravity) {
+                return;
+            }
+            
             rb.AddForce(GravityVector, ForceMode.Acceleration);
         }
 

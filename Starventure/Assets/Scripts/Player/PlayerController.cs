@@ -13,6 +13,7 @@ namespace Starventure.Player {
 		[SerializeField] private StellarRigidbody srb;
 		[SerializeField] private Transform orientation;
 		[SerializeField] private float acceleration = 10.0f;
+		[SerializeField] private float movementHaltForce = 0.5f;
 		[SerializeField] private float speed = 5.0f;
 		[SerializeField] private float movementHaltThreshold = 0.05f;
 		[SerializeField] private float jumpForce = 10.0f;
@@ -27,6 +28,7 @@ namespace Starventure.Player {
 
 		private TweenerCore<Vector3, Vector3, VectorOptions> _tweener;
 		private bool _isTweenerRunning;
+		private bool _canDisableGravity;
 
 		private Vector3 _gravity;
 		
@@ -63,19 +65,28 @@ namespace Starventure.Player {
 			_moveInput = InputManager.Player.Move.ReadValue<Vector2>().normalized;
 			
 			UpdateIsGrounded();
+
+			if (InputManager.Player.Jump.WasPressedThisFrame() && _isGrounded) {
+				_canDisableGravity = true;
+				_rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+			}
+
+			if (InputManager.Player.Jump.WasReleasedThisFrame()) {
+				_canDisableGravity = false;
+			}
 			
-			// TODO: fix jump system
-			// if (InputManager.Player.Jump.WasPressedThisFrame() && _isGrounded) {
-			// 	_rb.AddForce(-srb.GravityDirection * jumpForce, ForceMode.Impulse);
-			// }
+			srb.disableGravity = InputManager.Player.Jump.IsPressed() && _canDisableGravity;
 		}
 
 		private void FixedUpdate() {
+			if (srb.currentPlanet) {
+				_rb.angularVelocity = Vector3.zero;
+			}
+			
 			Vector3 movementDir = orientation.right * _moveInput.x + orientation.forward * _moveInput.y;
 
-			if (_moveInput.sqrMagnitude < movementHaltThreshold) {
-				_rb.AddForce(_gravity, ForceMode.VelocityChange);
-				return;
+			if (_moveInput.sqrMagnitude < movementHaltThreshold && !srb.disableGravity) {
+				_rb.AddForce(-_approximatedMovementVelocity.normalized * movementHaltForce, ForceMode.Acceleration);
 			}
 			
 			// Vector3 predictedPos = Vector3.MoveTowards(transform.position, transform.position + movementDir, speed * Time.deltaTime);
