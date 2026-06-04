@@ -270,11 +270,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9322179
+      value: 0.86875165
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.3618977
+      value: 0.49524805
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalRotation.y
@@ -286,7 +286,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -42.434
+      value: 59.372
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -326,10 +326,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  speed: 1.4
+  speed: 5
   startOffset: 0
   orbitCenter: {fileID: 1318394322}
-  ellipseSize: {x: 70, y: 70}
+  ellipseSize: {x: 150, y: 120}
+--- !u!4 &676386315 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
+  m_PrefabInstance: {fileID: 676386310}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,7 +804,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3692608164016927875, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: innerRadius
-      value: 12
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 3692608164016927875, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: outerRadius
@@ -871,15 +876,15 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 9a44f7d77e98d65459cf03691abe0378, type: 2}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.7197783
+      value: 3.5135071
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.7197783
+      value: 3.5135071
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.7197783
+      value: 3.5135071
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -951,10 +956,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  speed: 1.4
+  speed: 6
   startOffset: 9.3
-  orbitCenter: {fileID: 1318394322}
-  ellipseSize: {x: 120, y: 150}
+  orbitCenter: {fileID: 676386315}
+  ellipseSize: {x: 50, y: 50}
 --- !u!1001 &1430656786111640286
 PrefabInstance:
   m_ObjectHideFlags: 0
