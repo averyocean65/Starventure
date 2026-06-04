@@ -800,11 +800,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3692608164016927875, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: gravity
-      value: 6
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3692608164016927875, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: innerRadius
-      value: 23
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3692608164016927875, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: outerRadius
@@ -876,15 +876,15 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 9a44f7d77e98d65459cf03691abe0378, type: 2}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalScale.x
-      value: 3.5135071
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3.5135071
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalScale.z
-      value: 3.5135071
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 8815525081448476044, guid: 4ca5a8af1ec84bc4199a6635ca2b29a0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -956,8 +956,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  speed: 6
-  startOffset: 9.3
+  speed: 100
+  startOffset: 0
   orbitCenter: {fileID: 676386315}
   ellipseSize: {x: 50, y: 50}
 --- !u!1001 &1430656786111640286
