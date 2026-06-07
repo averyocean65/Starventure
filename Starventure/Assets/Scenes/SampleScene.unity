@@ -481,6 +481,10 @@ PrefabInstance:
       value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 4732440164003104325, guid: 39beba75b8593a749a19a4022ed2f722, type: 3}
+      propertyPath: sprintSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4732440164003104325, guid: 39beba75b8593a749a19a4022ed2f722, type: 3}
       propertyPath: jetpackLaunchForce
       value: 15
       objectReference: {fileID: 0}

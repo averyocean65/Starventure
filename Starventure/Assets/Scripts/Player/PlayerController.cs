@@ -17,6 +17,7 @@ namespace Starventure.Player {
 		[SerializeField] private float acceleration = 10.0f;
 		[SerializeField] private float movementHaltForce = 0.5f;
 		[SerializeField] private float speed = 5.0f;
+		[SerializeField] private float sprintSpeed = 5.0f;
 		[SerializeField] private float movementHaltThreshold = 0.05f;
 		
 		[Header("Jetpack")]
@@ -31,6 +32,8 @@ namespace Starventure.Player {
 		[SerializeField] private float groundCheckRadius;
 		[SerializeField] private LayerMask groundCheckLayer;
 
+		private float _currentSpeed => _isSprinting ? sprintSpeed : speed;
+		
 		private bool _isGrounded;
 
 		private TweenerCore<Vector3, Vector3, VectorOptions> _tweener;
@@ -39,6 +42,7 @@ namespace Starventure.Player {
 		private bool _canDisableJetpack;
 		
 		private bool _isSprinting = false;
+		private bool _sprintRefill = false;
 
 		private Vector3 _gravity;
 		
@@ -83,21 +87,30 @@ namespace Starventure.Player {
 				_rb.AddForce(transform.up * jetpackLaunchForce, ForceMode.Impulse);
 				stamina.Deplete();
 			}
-
-			if (InputManager.Player.Sprint.IsPressed() && _moveInput.magnitude >= movementHaltThreshold && !_isSprinting) {
-				_isSprinting = true;
-				stamina.Deplete();
-			}
-
-			if ((InputManager.Player.Sprint.WasReleasedThisFrame() || _moveInput.magnitude > movementHaltThreshold) && _isSprinting) {
-				_isSprinting = false;
-				stamina.Deplete(false);
-			}
 			
 			if (((InputManager.Player.Jump.WasReleasedThisFrame() || _isGrounded)
 			     && _canDisableGravity && _canDisableJetpack)
 			    || stamina.IsEmpty) {
 				_canDisableJetpack = false;
+				stamina.Deplete(false);
+			}
+
+			if (InputManager.Player.Sprint.WasPressedThisFrame()) {
+				_sprintRefill = false;
+			}
+			
+			if (InputManager.Player.Sprint.IsPressed() 
+			    && _moveInput.magnitude >= movementHaltThreshold 
+			    && !_sprintRefill
+			    && !_isSprinting) {
+				_isSprinting = true;
+				stamina.Deplete();
+			}
+
+			if ((InputManager.Player.Sprint.WasReleasedThisFrame()|| _moveInput.magnitude < movementHaltThreshold || stamina.IsEmpty)
+			    && _isSprinting) {
+				_isSprinting = false;
+				_sprintRefill = true;
 				stamina.Deplete(false);
 			}
 
@@ -130,8 +143,8 @@ namespace Starventure.Player {
 			Vector3 gravityDeduction = srb.currentPlanet ? _gravity : Vector3.zero;
 			_approximatedMovementVelocity = _rb.linearVelocity - gravityDeduction;
 			
-			if (_approximatedMovementVelocity.magnitude > speed) {
-				_rb.linearVelocity = _approximatedMovementVelocity.normalized * speed + gravityDeduction;
+			if (_approximatedMovementVelocity.magnitude > _currentSpeed) {
+				_rb.linearVelocity = _approximatedMovementVelocity.normalized * _currentSpeed + gravityDeduction;
 			}
 		}
 
@@ -142,7 +155,7 @@ namespace Starventure.Player {
 			
 			_isTweenerRunning = true;
 			while (percentage < 1.0f) {
-				float timeStep = Time.deltaTime * speed;
+				float timeStep = Time.deltaTime * realignSpeed;
 				
 				_gravity = Vector3.Lerp(initialGravity, srb.GravityDirection, percentage);
 				yield return new WaitForSeconds(timeStep);
