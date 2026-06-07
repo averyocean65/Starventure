@@ -37,6 +37,8 @@ namespace Starventure.Player {
 		private bool _isTweenerRunning;
 		private bool _canDisableGravity;
 		private bool _canDisableJetpack;
+		
+		private bool _isSprinting = false;
 
 		private Vector3 _gravity;
 		
@@ -80,19 +82,27 @@ namespace Starventure.Player {
 				_canDisableGravity = true;
 				_rb.AddForce(transform.up * jetpackLaunchForce, ForceMode.Impulse);
 				stamina.Deplete();
-				stamina.Restore(false);
 			}
 
+			if (InputManager.Player.Sprint.IsPressed() && _moveInput.magnitude >= movementHaltThreshold && !_isSprinting) {
+				_isSprinting = true;
+				stamina.Deplete();
+			}
+
+			if ((InputManager.Player.Sprint.WasReleasedThisFrame() || _moveInput.magnitude > movementHaltThreshold) && _isSprinting) {
+				_isSprinting = false;
+				stamina.Deplete(false);
+			}
+			
 			if (((InputManager.Player.Jump.WasReleasedThisFrame() || _isGrounded)
 			     && _canDisableGravity && _canDisableJetpack)
 			    || stamina.IsEmpty) {
 				_canDisableJetpack = false;
 				stamina.Deplete(false);
-				stamina.Restore();
 			}
 
 			if (!srb.currentPlanet) {
-				stamina.ResetCounters();
+				stamina.ResetCounter();
 			}
 			
 			srb.disableGravity = InputManager.Player.Jump.IsPressed() && _canDisableGravity;
@@ -111,19 +121,16 @@ namespace Starventure.Player {
 			
 			Vector3 movementDir = orientation.right * _moveInput.x + orientation.forward * _moveInput.y;
 
-			if (_moveInput.sqrMagnitude < movementHaltThreshold && !srb.disableGravity) {
+			if (_moveInput.magnitude < movementHaltThreshold && !srb.disableGravity) {
 				_rb.AddForce(-_approximatedMovementVelocity.normalized * movementHaltForce, ForceMode.Acceleration);
 			}
-			
-			// Vector3 predictedPos = Vector3.MoveTowards(transform.position, transform.position + movementDir, speed * Time.deltaTime);
-			// _rb.MovePosition(predictedPos);
 			
 			_rb.AddForce(movementDir * acceleration, ForceMode.Acceleration);
 
 			Vector3 gravityDeduction = srb.currentPlanet ? _gravity : Vector3.zero;
 			_approximatedMovementVelocity = _rb.linearVelocity - gravityDeduction;
 			
-			if (Mathf.Abs(_approximatedMovementVelocity.magnitude) > speed) {
+			if (_approximatedMovementVelocity.magnitude > speed) {
 				_rb.linearVelocity = _approximatedMovementVelocity.normalized * speed + gravityDeduction;
 			}
 		}

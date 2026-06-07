@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,12 +10,11 @@ public class DepletableResource : MonoBehaviour {
     
     public float Value { get; protected set; }
     public bool IsDepleting => _consumers > 0;
-    public bool IsRestoring => _restorers > 0;
+    public bool IsRestoring => !IsDepleting;
     public bool IsFull => Mathf.Approximately(Value, maxValue);
     public bool IsEmpty => Mathf.Approximately(Value, 0);
     
     private int _consumers = 0;
-    private int _restorers = 0;
     
 
     public void Deplete(bool startDepleting = true) {
@@ -31,19 +29,6 @@ public class DepletableResource : MonoBehaviour {
 
         _consumers--;
     }
-    
-    public void Restore(bool startRestoring = true) {
-        if (startRestoring) {
-            _restorers++;
-            return;
-        }
-
-        if (_restorers == 0) {
-            return;
-        }
-
-        _restorers--;
-    }
 
     private void Start() {
         Value = maxValue;
@@ -55,9 +40,8 @@ public class DepletableResource : MonoBehaviour {
         if (IsDepleting) {
             Value -= depletionRate * _consumers * Time.deltaTime;
         }
-
-        if (IsRestoring) {
-            Value += restorationRate * _restorers * Time.deltaTime;
+        else {
+            Value += restorationRate * Time.deltaTime;
         }
 
         Value = Mathf.Clamp(Value, 0, maxValue);
@@ -68,8 +52,7 @@ public class DepletableResource : MonoBehaviour {
         Value = maxValue;
     }
 
-    public void ResetCounters() {
+    public void ResetCounter() {
         _consumers = 0;
-        _restorers = 0;
     }
 }

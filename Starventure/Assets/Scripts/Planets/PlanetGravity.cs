@@ -3,11 +3,15 @@ using UnityEngine;
 
 namespace Starventure.Planets {
     public class PlanetGravity : MonoBehaviour {
-        public float Radius => innerRadius + outerRadius;
+        private float RadiusScale => core.lossyScale.x;
+        
+        public float Radius => InnerRadius + OuterRadius;
+        public float InnerRadius => innerRadius * RadiusScale;
+        public float OuterRadius => outerRadius * RadiusScale;
         
         public Transform core;
-        public float innerRadius = 10.0f;
-        public float outerRadius = 5.0f;
+        [SerializeField] private float innerRadius = 10.0f;
+        [SerializeField] private float outerRadius = 5.0f;
         public float gravity = 9.81f;
         public AnimationCurve gravityLossCurve = AnimationCurve.Linear(0, 1, 1, 0);
         public AnimationCurve dampingCurve = AnimationCurve.Linear(0, 1, 1, 0);
@@ -18,7 +22,7 @@ namespace Starventure.Planets {
             }
             
             Gizmos.color = Color.cyan;
-            Gizmos.DrawWireSphere(core.position, innerRadius);
+            Gizmos.DrawWireSphere(core.position, InnerRadius);
 
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireSphere(core.position, Radius);
@@ -26,7 +30,7 @@ namespace Starventure.Planets {
 
         public float CalculateGravityStrength(Vector3 objectPosition) {
             float distance = Vector3.Distance(core.position, objectPosition);
-            if (distance <= innerRadius) {
+            if (distance <= InnerRadius) {
                 return gravity;
             }
 
@@ -34,12 +38,12 @@ namespace Starventure.Planets {
                 return 0;
             }
             
-            return gravityLossCurve.Evaluate((distance - innerRadius) / outerRadius) * gravity;
+            return gravityLossCurve.Evaluate((distance - InnerRadius) / OuterRadius) * gravity;
         }
         
         public float CalculateDampingMultiplier(Vector3 objectPosition) {
             float distance = Vector3.Distance(core.position, objectPosition);
-            if (distance <= innerRadius) {
+            if (distance <= InnerRadius) {
                 return 1;
             }
 
@@ -47,7 +51,7 @@ namespace Starventure.Planets {
                 return 0;
             }
             
-            return gravityLossCurve.Evaluate((distance - innerRadius) / outerRadius);
+            return gravityLossCurve.Evaluate((distance - InnerRadius) / OuterRadius);
         }
 
         public Vector3 CalculateGravityDirection(Vector3 objectPosition) {
