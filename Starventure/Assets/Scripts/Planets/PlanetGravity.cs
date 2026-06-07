@@ -28,7 +28,7 @@ namespace Starventure.Planets {
             Gizmos.DrawWireSphere(core.position, Radius);
         }
 
-        public float CalculateGravityStrength(Vector3 objectPosition) {
+        public virtual float CalculateGravityStrength(Vector3 objectPosition) {
             float distance = Vector3.Distance(core.position, objectPosition);
             if (distance <= InnerRadius) {
                 return gravity;
@@ -41,7 +41,7 @@ namespace Starventure.Planets {
             return gravityLossCurve.Evaluate((distance - InnerRadius) / OuterRadius) * gravity;
         }
         
-        public float CalculateDampingMultiplier(Vector3 objectPosition) {
+        public virtual float CalculateDampingMultiplier(Vector3 objectPosition) {
             float distance = Vector3.Distance(core.position, objectPosition);
             if (distance <= InnerRadius) {
                 return 1;
@@ -54,7 +54,7 @@ namespace Starventure.Planets {
             return gravityLossCurve.Evaluate((distance - InnerRadius) / OuterRadius);
         }
 
-        public Vector3 CalculateGravityDirection(Vector3 objectPosition) {
+        public virtual Vector3 CalculateGravityDirection(Vector3 objectPosition) {
             return (core.position - objectPosition).normalized;
         }
         
