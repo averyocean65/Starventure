@@ -1,3 +1,4 @@
+using Starventure.Planets;
 using UnityEngine;
 
 namespace Starventure.Physics {
@@ -5,6 +6,8 @@ namespace Starventure.Physics {
     public class StellarRigidbody : StellarObject
     {
         public Rigidbody rb;
+        
+        public Vector3 ExitPlanetVelocity { get; private set; }
         
         public bool useRegularGravity;
         public bool disableGravity;
@@ -20,9 +23,15 @@ namespace Starventure.Physics {
                 rb = GetComponent<Rigidbody>();
             }
             
+            OnExitPlanet.AddListener(ExitPlanetEvent);
+            
             rb.useGravity = useRegularGravity;
             _regularDamping = rb.linearDamping;
             _regularAngularDamping = rb.angularDamping;
+        }
+
+        private void ExitPlanetEvent(Planet arg0) {
+            ExitPlanetVelocity = rb.linearVelocity;
         }
 
         private void Update() {

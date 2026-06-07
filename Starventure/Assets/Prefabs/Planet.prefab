@@ -109,7 +109,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8815525081448476044}
   - component: {fileID: 1419966631515483557}
-  - component: {fileID: 3692608164016927875}
+  - component: {fileID: 8352501129995546904}
   m_Layer: 0
   m_Name: Planet
   m_TagString: Untagged
@@ -147,9 +147,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6a81d8116cfc93498b6b5ea20306d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: {fileID: 3692608164016927875}
+  gravity: {fileID: 8352501129995546904}
   visitorParent: {fileID: 1201188731855804448}
---- !u!114 &3692608164016927875
+--- !u!114 &8352501129995546904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,12 +158,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3714036153779614871}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a82dab738d78b048a02eb7d7702bc01, type: 3}
+  m_Script: {fileID: 11500000, guid: 405af6fdd65d4f5abf12c1d2b6c38f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  core: {fileID: 1003982413057915215}
-  innerRadius: 20
-  outerRadius: 10
+  root: {fileID: 1003982413057915215}
   gravity: 9.81
   gravityLossCurve:
     serializedVersion: 2
@@ -213,6 +211,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  innerRadius: 10
+  outerRadius: 5
 --- !u!1 &4100515887586342846
 GameObject:
   m_ObjectHideFlags: 0

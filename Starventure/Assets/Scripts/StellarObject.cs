@@ -1,3 +1,4 @@
+using System;
 using Starventure.Planets;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,7 +10,7 @@ namespace Starventure {
 
         public UnityEvent<Planet> OnEnterPlanet;
         public UnityEvent<Planet> OnExitPlanet;
-        
+
         private void OnTriggerEnter(Collider other) {
             if (!other.CompareTag(CustomTags.Atmosphere)) {
                 return;
@@ -34,9 +35,11 @@ namespace Starventure {
                 
                 OnExitPlanet.Invoke(currentPlanet);
                 currentPlanet.UnregisterVisitor(gameObject);
-                
+            
                 currentAtmosphere = null;
                 currentPlanet = null;
+
+                transform.parent = null;
             }
         }
     }

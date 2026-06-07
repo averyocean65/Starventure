@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Starventure.Physics {
+namespace Starventure.Physics.Gravity {
     public abstract class CustomGravity : MonoBehaviour {
         public Transform root;
         public float gravity = 9.81f;

@@ -1,7 +1,6 @@
-using Starventure.Planets;
 using UnityEngine;
 
-namespace Starventure.Physics {
+namespace Starventure.Physics.Gravity {
 	public class SphericalGravity : CustomGravity {
 		private float RadiusScale => root.lossyScale.x;
 		public float Radius => InnerRadius + OuterRadius;
