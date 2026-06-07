@@ -166,6 +166,7 @@ namespace Starventure.Player {
 		}
 		
 		private void OnEnterPlanet(Planet arg0) {
+			StopAllCoroutines();
 			StartCoroutine(ISmoothGravityRedirect());
 			_canDisableGravity = true;
 			_canDisableJetpack = true;
