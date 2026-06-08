@@ -21,8 +21,11 @@ namespace Starventure {
             }
 
             _parentMap.Add(visitor, visitor.transform.parent);
-            Debug.Log($"Registered: {visitor.name} (original parent: {visitor.transform.parent.name}");
-            
+
+            Debug.Log(visitor.transform.parent
+                ? $"Registered: {visitor.name} (original parent: {visitor.transform.parent.name})"
+                : $"Registered: {visitor.name}");
+
             visitor.transform.SetParent(visitorParent, true);
         }
 

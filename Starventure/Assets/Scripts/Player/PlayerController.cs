@@ -162,6 +162,8 @@ namespace Starventure.Player {
 				percentage += timeStep;
 			}
 
+			_gravity = srb.GravityDirection;
+
 			_isTweenerRunning = false;
 		}
 		

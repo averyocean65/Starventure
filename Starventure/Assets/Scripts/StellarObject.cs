@@ -38,8 +38,6 @@ namespace Starventure {
             
                 currentAtmosphere = null;
                 currentPlanet = null;
-
-                transform.parent = null;
             }
         }
     }
