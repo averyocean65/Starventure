@@ -916,13 +916,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   srb: {fileID: 365745889671712123}
   orientation: {fileID: 1302441598699888114}
-  acceleration: 10
-  movementHaltForce: 10
-  speed: 5
+  acceleration: 50
+  movementHaltForce: 30
+  speed: 7.5
+  sprintSpeed: 15
   movementHaltThreshold: 0.05
-  jumpForce: 5
+  jetpackLaunchForce: 15
+  jetpackCooldown: 0.1
   stamina: {fileID: 208880641062996655}
-  realignSpeed: 2.5
+  realignSpeed: 0.5
   groundCheck: {fileID: 8188793532175154911}
   groundCheckRadius: 0.4
   groundCheckLayer:
@@ -956,9 +958,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df0315f3f853883409f8912689cb85f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxValue: 50
+  maxValue: 10
   depletionRate: 2
-  restorationRate: 0.5
+  restorationRate: 4
   uiSlider: {fileID: 4591622376662993378}
 --- !u!114 &365745889671712123
 MonoBehaviour:
